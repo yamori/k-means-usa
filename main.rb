@@ -29,7 +29,7 @@ def populateCitiesHash(jsonData)
 				cityDuplicateHash[city] = 1
 			end
 			city = city + cityDuplicateHash[city].to_s
-			puts city
+			@citiesHash[city] = {'longitude': obj['longitude'], 'latitude': obj['latitude'] }
 		end
 	end
 end
@@ -40,6 +40,4 @@ jsonData = jsonParseCities
 
 populateCitiesHash(jsonData)
 
-
-
-# darn: grep -irn springfield data/USA_cities.json
+puts @citiesHash.inspect
