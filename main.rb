@@ -1,12 +1,19 @@
 require 'json'
 
+######## Instance vars defined
 @jsonData = nil
 
-File.open('data/USA_cities.json') do |f|
-  @jsonData = JSON.parse(f.read)
-  
-  # This block automatically closes File.open
+######## Method definitions
+def jsonParseCities
+	File.open('data/USA_cities.json') do |f|
+		@jsonData = JSON.parse(f.read)
+		# This block automatically closes File.open
+	end
 end
+
+######## Script begins
+
+jsonParseCities
 
 
 @jsonData.each do |obj|
