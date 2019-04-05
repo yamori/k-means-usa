@@ -1,3 +1,5 @@
+load './USAStates.rb'
+
 require 'json'
 
 ######## Important vars defined, variables that shouldn't change much
@@ -17,30 +19,24 @@ def jsonParseCities
 end
 
 def populateCitiesHashAndDataArray(jsonData)
-	cityDuplicateHash = Hash.new # Use this to track multiple cities
 	
 	jsonData.each do |obj|
 		if obj['longitude'] > -125 # no Alaska or Hawaii please.
 			# 
 			city = obj['city']
+			state = obj['state']
 			long = obj['longitude'].to_f
 			lat  = obj['latitude'].to_f
 			
-			if cityDuplicateHash[city] != nil
-				# Increment and append
-				cityDuplicateHash[city] += 1
-			else
-				# First time this city detected
-				cityDuplicateHash[city] = 1
-			end
-			city = city + cityDuplicateHash[city].to_s # Appends the number to the city
+			# Create unique label
+			label = "#{city}(#{USAStates.findStateCode(state)})"
 			
 			# Add to the hash (to track city uniqueness)
-			@citiesHash[city] = {'longitude': long, 'latitude': lat }
+			@citiesHash[label] = {'longitude': long, 'latitude': lat }
 			
 			# Add to the arrays (which will be fed into the kmeans module)
 			#  (each row corresponding to the other arrays respective row)
-			@citiesLabels.push(city)
+			@citiesLabels.push(label)
 			@citiesData.push( [long, lat] )
 		end
 	end
@@ -51,5 +47,6 @@ jsonData = jsonParseCities
 
 populateCitiesHashAndDataArray(jsonData)
 
-puts @citiesData[0..3].inspect
-puts @citiesLabels[0..3].inspect
+puts @citiesHash.length
+puts @citiesData.length
+puts @citiesLabels.length
