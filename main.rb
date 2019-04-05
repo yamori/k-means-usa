@@ -1,6 +1,7 @@
 load './USAStates.rb'
 
 require 'json'
+require 'kmeans-clusterer'
 
 ######## Important vars defined, variables that shouldn't change much
 jsonData = nil
@@ -42,11 +43,19 @@ def populateCitiesHashAndDataArray(jsonData)
 	end
 end
 
+def doKMeansCluster(k, data, labels)
+	kmeans = KMeansClusterer.run k, data, labels: labels, runs: 100
+end
+
 ######## Script begins
 jsonData = jsonParseCities
 
 populateCitiesHashAndDataArray(jsonData)
 
-puts @citiesHash.length
-puts @citiesData.length
-puts @citiesLabels.length
+clustering = doKMeansCluster(12, @citiesData, @citiesLabels)
+
+clustering.clusters.each do |cluster|
+  puts "Cluster #{cluster.id}"
+  puts "Center of Cluster: #{cluster.centroid}"
+  puts "Cities in Cluster: " + cluster.points.map{ |c| c.label }.join(",")
+end
