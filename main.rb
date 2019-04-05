@@ -8,6 +8,7 @@ jsonData = nil
 @citiesHash = Hash.new
 @citiesData = []
 @citiesLabels = []
+CSV_OUT_FILE = "clustering.csv" # ignored by git.  (yay Ruby constants!!!)
 
 ######## Method definitions
 def jsonParseCities
@@ -47,6 +48,26 @@ def doKMeansCluster(k, data, labels)
 	kmeans = KMeansClusterer.run k, data, labels: labels, runs: 100
 end
 
+def csvPrintByCluster(clustering)
+	file = File.open(CSV_OUT_FILE, "w") # 'w' means it overwrite if file already exists
+	# Iterate over each cluster(size is k)
+	clustering.clusters.each do |cluster|
+		clusterNumber = cluster.id # Convenient, otherwise we'd have to use an each_with_index
+		
+		# Iterate over all the points in the cluster
+		cluster.points.each  do |point|
+			label = point.label
+			
+			# Use the Hash to grab the coordinates!
+			latLong = @citiesHash[label]
+			
+			# Write to file
+			file.write("#{clusterNumber},#{label},#{latLong[:longitude]}," + ","*clusterNumber + "#{latLong[:latitude]},\n")
+		end
+	end
+	file.close
+end
+
 ######## Script begins
 jsonData = jsonParseCities
 
@@ -54,8 +75,4 @@ populateCitiesHashAndDataArray(jsonData)
 
 clustering = doKMeansCluster(12, @citiesData, @citiesLabels)
 
-clustering.clusters.each do |cluster|
-  puts "Cluster #{cluster.id}"
-  puts "Center of Cluster: #{cluster.centroid}"
-  puts "Cities in Cluster: " + cluster.points.map{ |c| c.label }.join(",")
-end
+csvPrintByCluster(clustering)
