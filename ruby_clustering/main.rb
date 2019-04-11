@@ -13,7 +13,7 @@ CSV_OUT_FILE = "clustering.csv" # ignored by git.  (yay Ruby constants!!!)
 ######## Method definitions
 def jsonParseCities
 	parsedData = nil
-	File.open('data/USA_cities.json') do |f|
+	File.open('../data/USA_cities.json') do |f|
 		parsedData = JSON.parse(f.read)
 		# This block automatically closes File.open
 	end
