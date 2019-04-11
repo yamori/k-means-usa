@@ -23,24 +23,25 @@ end
 def populateCitiesHashAndDataArray(jsonData)
 	
 	jsonData.each do |obj|
-		if obj['longitude'] > -125 # no Alaska or Hawaii please.
-			# 
-			city = obj['city']
-			state = obj['state']
-			long = obj['longitude'].to_f
-			lat  = obj['latitude'].to_f
-			
-			# Create unique label
-			label = "#{city}(#{USAStates.findStateCode(state)})"
-			
-			# Add to the hash (to track city uniqueness)
-			@citiesHash[label] = {'longitude': long, 'latitude': lat }
-			
-			# Add to the arrays (which will be fed into the kmeans module)
-			#  (each row corresponding to the other arrays respective row)
-			@citiesLabels.push(label)
-			@citiesData.push( [long, lat] )
+		if obj['longitude'] < -125 # no Alaska or Hawaii please.
+			next
 		end
+		
+		city = obj['city']
+		state = obj['state']
+		long = obj['longitude'].to_f
+		lat  = obj['latitude'].to_f
+		
+		# Create unique label
+		label = "#{city}(#{USAStates.findStateCode(state)})"
+		
+		# Add to the hash (to track city uniqueness)
+		@citiesHash[label] = {'longitude': long, 'latitude': lat }
+		
+		# Add to the arrays (which will be fed into the kmeans module)
+		#  (each row corresponding to the other arrays respective row)
+		@citiesLabels.push(label)
+		@citiesData.push( [long, lat] )
 	end
 end
 
