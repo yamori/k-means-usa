@@ -94,11 +94,14 @@ jsonData = jsonParseCities
 
 populateCitiesHashAndDataArray(jsonData)
 
-k=12
-clustering = doKMeansCluster(k, @citiesData, @citiesLabels)
+puts "### Cluster k=4..25 ###"
+(4..25).each do |k|
+	puts "Clustering at k=#{k}..."
+	clustering = doKMeansCluster(k, @citiesData, @citiesLabels)
 
-# csvPrintByCluster(clustering)
+	# csvPrintByCluster(clustering)
 
-addClusteringToCitiesHash(k, clustering)
+	addClusteringToCitiesHash(k, clustering)
+end
 
 ClusteredCity.writeHashToJSONFile(@citiesHash, "cityClustering.json")
