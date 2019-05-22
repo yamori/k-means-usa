@@ -4,7 +4,9 @@ Exercise in unsupervised learning, using lat/long data.
 
 ## Run
 
-ruby main.rb
+### Perform ML Clustering
+
+`cd ruby_clustering && ruby main.rb`
 
 ## Reference
 
